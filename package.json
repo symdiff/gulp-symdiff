@@ -1,16 +1,24 @@
 {
   "name": "gulp-symdiff",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Gulp plugin for symdiff",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/symdiff/gulp-symdiff.git"
+  },
+  "bugs": {
+    "url": "https://github.com/symdiff/gulp-symdiff/issues"
+  },
+  "homepage": "https://symdiff.github.io",
   "scripts": {
     "test": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
   "author": "Nikolaus Piccolotto <hello@npiccolotto.com>",
-  "license": "MIT",
+  "license": "Apache 2.0",
   "dependencies": {
     "gulp-util": "3.0.4",
-    "symdiff": "0.0.1",
+    "symdiff": "0.0.2",
     "through2": "0.6.5"
   },
   "devDependencies": {
