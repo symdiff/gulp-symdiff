@@ -16,10 +16,15 @@
   "devDependencies": {
     "assert": "1.3.0",
     "coveralls": "2.11.2",
+    "gulp": "3.8.11",
+    "gulp-plumber": "1.0.0",
+    "gulp-util": "3.0.4",
+    "gulp-watch": "4.2.4",
     "istanbul": "0.3.13",
+    "minimist": "1.1.1",
     "mocha": "2.2.4",
     "sinon": "1.14.1",
-    "symdiff-css": "0.0.1",
+    "symdiff-css": "0.0.2",
     "symdiff-html": "0.0.1"
   }
 }
