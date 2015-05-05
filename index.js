@@ -3,11 +3,6 @@ var gutil = require('gulp-util'),     // for gulp plugin error
     symdiff = require('symdiff'),
     PLUGIN_NAME = 'gulp-symdiff';
 
-function flatten(prev, cur) {
-    prev.push.apply(prev, cur);
-    return prev;
-}
-
 // actual function that gets exported
 function gulpSymdiff( opts ) {
     'use strict';
