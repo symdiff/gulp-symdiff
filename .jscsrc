@@ -1,0 +1,57 @@
+{
+  "excludeFiles": ["node_modules/**"],
+  "validateIndentation": 4,
+    "disallowMixedSpacesAndTabs": true,
+    "maximumLineLength": 120,
+    "validateJSDoc": {
+        "checkParamNames": true,
+        "checkRedundantParams": true,
+        "requireParamTypes": true
+    },
+    "requireMultipleVarDecl": true,
+    "validateQuoteMarks": "'",
+    "requireSpacesInFunctionExpression": {
+        "beforeOpeningCurlyBrace": true
+    },
+    "requireSpacesInAnonymousFunctionExpression": {
+        "beforeOpeningRoundBrace": true
+    },
+    "disallowSpacesInNamedFunctionExpression": {
+        "beforeOpeningRoundBrace": true
+    },
+    "disallowMultipleSpaces": true,
+    "disallowSpacesInsideParentheses": true,
+    "disallowSpacesInsideArrayBrackets": "nested",
+    "disallowSpacesInsideObjectBrackets": "nested",
+    "requireParenthesesAroundIIFE": true,
+    "requireBlocksOnNewline": true,
+    "disallowNewlineBeforeBlockStatements": true,
+    "requireSpaceAfterKeywords": [
+        "do",
+        "for",
+        "if",
+        "else",
+        "switch",
+        "case",
+        "try",
+        "catch",
+        "void",
+        "while",
+        "with",
+        "return",
+        "typeof",
+        "function"
+    ],
+    "requireSpaceBeforeBlockStatements": true,
+    "requireSpaceBeforeBinaryOperators": true,
+    "requireSpaceAfterBinaryOperators": true,
+    "disallowSpaceBeforePostfixUnaryOperators": [
+        "+"
+    ],
+    "validateParameterSeparator": ", ",
+    "disallowKeywords": [
+        "continue",
+        "with"
+    ],
+    "requireCommaBeforeLineBreak": true
+}

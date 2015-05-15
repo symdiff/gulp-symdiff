@@ -1,10 +1,10 @@
-var gutil = require('gulp-util'),     // for gulp plugin error
-    through = require('through2'),    // stream library
+var gutil = require('gulp-util'), // for gulp plugin error
+    through = require('through2'), // stream library
     symdiff = require('symdiff'),
     PLUGIN_NAME = 'gulp-symdiff';
 
 // actual function that gets exported
-function gulpSymdiff( opts ) {
+function gulpSymdiff(opts) {
     'use strict';
     opts = opts || {};
     var templatePlugins = opts.templates || [],
@@ -13,9 +13,9 @@ function gulpSymdiff( opts ) {
         templateClasses = [],
         cssClasses = [],
 
-        transform = through.obj(function(file, enc, done) {
+        transform = through.obj(function (file, enc, done) {
             var self = this,
-                content =  String(file.contents);
+                content = String(file.contents);
 
             if (file.isNull()) {
                 self.push(file);
@@ -27,12 +27,12 @@ function gulpSymdiff( opts ) {
             }
 
             templatePlugins
-            .forEach(function(plugin) {
+            .forEach(function (plugin) {
                 Array.prototype.push.apply(templateClasses, plugin(content));
             });
 
             cssPlugins
-            .forEach(function(plugin) {
+            .forEach(function (plugin) {
                 Array.prototype.push.apply(cssClasses, plugin(content));
             });
 
@@ -42,7 +42,7 @@ function gulpSymdiff( opts ) {
 
     // we have to wait until we received all files
     // otherwise we would throw an error after the first one
-    transform.on('finish', function() {
+    transform.on('finish', function () {
         var result = symdiff(cssClasses, templateClasses, ignoreClasses),
             error;
 
