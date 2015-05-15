@@ -32,8 +32,8 @@ describe('the bad CSS case', function () {
         stream.on('data', dataSpy);
         stream.on('error', function (err) {
             // check correct class
-            assert.equal(err.css.length, 1);
-            assert.equal(err.css[ 0 ], 'row');
+            assert.equal(err.classes.length, 1);
+            assert.equal(err.classes[ 0 ], 'row');
 
             done();
         });

@@ -1,8 +1,18 @@
 var gutil = require('gulp-util'), // for gulp plugin error
     through = require('through2'), // stream library
     symbol = require('log-symbols'),
+    _ = require('lodash'),
     symdiff = require('symdiff'),
     PLUGIN_NAME = 'gulp-symdiff';
+
+function dedup(t, idx, arr) {
+    return arr.lastIndexOf(t) === idx;
+}
+
+function flatten(prev, cur) {
+    Array.prototype.push.apply(prev, cur);
+    return prev;
+}
 
 // actual function that gets exported
 function gulpSymdiff(opts) {
@@ -11,6 +21,7 @@ function gulpSymdiff(opts) {
     var templatePlugins = opts.templates || [],
         cssPlugins = opts.css || [],
         ignoreClasses = opts.ignore || [],
+        classesPerFile = {},
         templateClasses = [],
         cssClasses = [],
 
@@ -27,15 +38,24 @@ function gulpSymdiff(opts) {
                 return done(new gutil.PluginError(PLUGIN_NAME, 'Streaming not supported'));
             }
 
-            templatePlugins
-            .forEach(function (plugin) {
-                Array.prototype.push.apply(templateClasses, plugin(content));
-            });
+            var tpl = templatePlugins
+                        .map(function (plugin) {
+                            return plugin(content);
+                        })
+                        .reduce(flatten, [])
+                        .filter(dedup),
+                css = cssPlugins
+                        .map(function (plugin) {
+                            return plugin(content);
+                        })
+                        .reduce(flatten, [])
+                        .filter(dedup),
+                all = tpl.concat(css);
 
-            cssPlugins
-            .forEach(function (plugin) {
-                Array.prototype.push.apply(cssClasses, plugin(content));
-            });
+            classesPerFile[String(file.path)] = all;
+
+            Array.prototype.push.apply(templateClasses, tpl);
+            Array.prototype.push.apply(cssClasses, css);
 
             self.push(file);
             done();
@@ -44,29 +64,34 @@ function gulpSymdiff(opts) {
     // we have to wait until we received all files
     // otherwise we would throw an error after the first one
     transform.on('finish', function () {
-        var result = symdiff(cssClasses, templateClasses, ignoreClasses),
+        var diff = symdiff(cssClasses, templateClasses, ignoreClasses),
+            joinedDiff = diff.css.concat(diff.templates),
+            outputLines = [],
             error;
 
-        if (result.css.length) {
-            error = new Error('Unused CSS classes');
-            error.css = result.css;
-        }
-        if (result.templates.length) {
-            if (!error) {
-                error = new Error('Undefined template classes');
+        Object
+        .keys(classesPerFile)
+        .forEach(function (file) {
+            var classes = classesPerFile[file],
+                intersect = _.intersection(classes, joinedDiff);
+            if (intersect.length) {
+                outputLines.push([
+                    symbol.error,
+                    gutil.colors.red(file),
+                    'contains unused classes:',
+                    gutil.colors.blue(intersect.join(' '))
+                ]);
             }
-            error.templates = result.templates;
-        }
+        });
 
-        if (error) {
-            if (error.css) {
-                gutil.log.apply(gutil, [symbol.error, gutil.colors.red(error.message), error.css.join(' ')]);
-            }
-            if (error.templates) {
-                gutil.log.apply(gutil, [symbol.error, gutil.colors.red(error.message), error.templates.join(' ')]);
-            }
+        outputLines.forEach(function (line) {
+            gutil.log.apply(gutil, line);
+        });
 
-            this.emit('error', new gutil.PluginError(PLUGIN_NAME, error));
+        if (joinedDiff.length) {
+            var error = new gutil.PluginError(PLUGIN_NAME, new Error('Unused classes found.'));
+            error.classes = joinedDiff;
+            this.emit('error', error);
         }
     });
 
