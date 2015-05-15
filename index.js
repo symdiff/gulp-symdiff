@@ -78,7 +78,7 @@ function gulpSymdiff(opts) {
                     symbol.error,
                     gutil.colors.red(file),
                     'contains unused classes:',
-                    gutil.colors.blue(intersect.join(' '))
+                    gutil.colors.blue(intersect.join(', '))
                 ]);
             }
         });
