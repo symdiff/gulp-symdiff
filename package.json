@@ -18,6 +18,7 @@
   "license": "Apache 2.0",
   "dependencies": {
     "gulp-util": "3.0.4",
+    "log-symbols": "1.0.2",
     "symdiff": "0.0.2",
     "through2": "0.6.5"
   },

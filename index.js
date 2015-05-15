@@ -1,5 +1,6 @@
 var gutil = require('gulp-util'), // for gulp plugin error
     through = require('through2'), // stream library
+    symbol = require('log-symbols'),
     symdiff = require('symdiff'),
     PLUGIN_NAME = 'gulp-symdiff';
 
@@ -59,10 +60,10 @@ function gulpSymdiff(opts) {
 
         if (error) {
             if (error.css) {
-                gutil.log.apply(gutil, [gutil.colors.cyan(error.message), error.css.join(' ')]);
+                gutil.log.apply(gutil, [symbol.error, gutil.colors.red(error.message), error.css.join(' ')]);
             }
             if (error.templates) {
-                gutil.log.apply(gutil, [gutil.colors.cyan(error.message), error.templates.join(' ')]);
+                gutil.log.apply(gutil, [symbol.error, gutil.colors.red(error.message), error.templates.join(' ')]);
             }
 
             this.emit('error', new gutil.PluginError(PLUGIN_NAME, error));
