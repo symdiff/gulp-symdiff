@@ -66,8 +66,7 @@ function gulpSymdiff(opts) {
     transform.on('finish', function () {
         var diff = symdiff(cssClasses, templateClasses, ignoreClasses),
             joinedDiff = diff.css.concat(diff.templates),
-            outputLines = [],
-            error;
+            outputLines = [];
 
         Object
         .keys(classesPerFile)
