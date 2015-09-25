@@ -88,20 +88,23 @@ function gulpSymdiff(opts) {
             outputLines = [];
 
         Object
-        .keys(classesPerFile)
+        .keys(warningsPerFile)
         .forEach(function (file) {
-            var classes = classesPerFile[file],
-                // not sure if this holds up
-                warnings = warningsPerFile[file],
-                intersect = _.intersection(classes, joinedDiff);
-
-            warnings.forEach(function (warning) {
+            warningsPerFile[file]
+            .forEach(function (warning) {
                 outputLines.push([
                     symbol.warning,
                     gutil.colors.yellow(file),
                     gutil.colors.yellow(warning)
                 ]);
             });
+        });
+
+        Object
+        .keys(classesPerFile)
+        .forEach(function (file) {
+            var classes = classesPerFile[file],
+                intersect = _.intersection(classes, joinedDiff);
 
             if (intersect.length) {
                 outputLines.push([
