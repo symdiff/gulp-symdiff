@@ -240,7 +240,7 @@ describe('warnings', function () {
         var errorSpy = sinon.spy(),
             warningEmitter = function () {
                 var classes = ['class'];
-                classes._warnings = ['plugin: Warning'];
+                classes.warnings = ['plugin: Warning'];
                 return classes;
             },
             css = createFile('test/happy/happy.css'),

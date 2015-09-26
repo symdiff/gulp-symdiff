@@ -53,12 +53,12 @@ function gulpSymdiff(opts) {
             // collect warnings
                 tplWarnings = tpl
                                 .map(function (classes) {
-                                    return classes._warnings || [];
+                                    return classes.warnings || [];
                                 })
                                 .reduce(flatten, []),
                 cssWarnings = css
                                 .map(function (classes) {
-                                    return classes._warnings || [];
+                                    return classes.warnings || [];
                                 })
                                 .reduce(flatten, []);
             warningsPerFile[filePath] = tplWarnings.concat(cssWarnings);
