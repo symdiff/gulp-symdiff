@@ -30,6 +30,12 @@ describe('the bad CSS case', function () {
             });
 
         stream.on('data', dataSpy);
+        stream.on('__OUTPUT_LINES__', function (lines) {
+            // check that it outputs lines
+            assert.equal(lines.length, 1);
+            // check for red error symbol
+            assert.equal(lines[0][0], '\u001b[31m✖\u001b[39m');
+        });
         stream.on('error', function (err) {
             // check correct class
             assert.equal(err.classes.length, 1);
@@ -224,6 +230,41 @@ describe('the bad HTML case', function () {
         });
 
         stream.write(html);
+        stream.write(css);
+        stream.end();
+    });
+});
+
+describe('warnings', function () {
+    it('should be printed', function (done) {
+        var errorSpy = sinon.spy(),
+            warningEmitter = function () {
+                var classes = ['class'];
+                classes.warnings = ['plugin: Warning'];
+                return classes;
+            },
+            css = createFile('test/happy/happy.css'),
+            stream = checkCSS({
+                ignore: ['class'],
+                css: [warningEmitter],
+                templates: []
+            });
+
+        stream.on('error', errorSpy);
+
+        var bufferedContent = [];
+        stream.on('data', function (buffered) {
+            bufferedContent.push(String(buffered.contents));
+        });
+        stream.on('__OUTPUT_LINES__', function (lines) {
+            // check that no error was thrown
+            assert.equal(errorSpy.called, false);
+            assert.equal(lines.length, 1);
+            // check for yellow warning symbol
+            assert.equal(lines[0][0], '\u001b[33m⚠\u001b[39m');
+            done();
+        });
+
         stream.write(css);
         stream.end();
     });

@@ -22,6 +22,7 @@ function gulpSymdiff(opts) {
         cssPlugins = opts.css || [],
         ignoreClasses = opts.ignore || [],
         classesPerFile = {},
+        warningsPerFile = {},
         templateClasses = [],
         cssClasses = [],
 
@@ -38,21 +39,39 @@ function gulpSymdiff(opts) {
                 return done(new gutil.PluginError(PLUGIN_NAME, 'Streaming not supported'));
             }
 
-            var tpl = templatePlugins
+
+            var filePath = String(file.path),
+                tpl = templatePlugins
                         .map(function (plugin) {
                             return plugin(content);
-                        })
-                        .reduce(flatten, [])
-                        .filter(dedup),
+                        }),
                 css = cssPlugins
                         .map(function (plugin) {
                             return plugin(content);
-                        })
-                        .reduce(flatten, [])
-                        .filter(dedup),
-                all = tpl.concat(css);
+                        }),
+            
+            // collect warnings
+                tplWarnings = tpl
+                                .map(function (classes) {
+                                    return classes.warnings || [];
+                                })
+                                .reduce(flatten, []),
+                cssWarnings = css
+                                .map(function (classes) {
+                                    return classes.warnings || [];
+                                })
+                                .reduce(flatten, []);
+            warningsPerFile[filePath] = tplWarnings.concat(cssWarnings);
 
-            classesPerFile[String(file.path)] = all;
+            // class handling
+            tpl = tpl
+                    .reduce(flatten, [])
+                    .filter(dedup);
+            css = css
+                    .reduce(flatten, [])
+                    .filter(dedup);
+
+            classesPerFile[filePath] = tpl.concat(css);
 
             Array.prototype.push.apply(templateClasses, tpl);
             Array.prototype.push.apply(cssClasses, css);
@@ -69,10 +88,24 @@ function gulpSymdiff(opts) {
             outputLines = [];
 
         Object
+        .keys(warningsPerFile)
+        .forEach(function (file) {
+            warningsPerFile[file]
+            .forEach(function (warning) {
+                outputLines.push([
+                    symbol.warning,
+                    gutil.colors.yellow(file),
+                    gutil.colors.yellow(warning)
+                ]);
+            });
+        });
+
+        Object
         .keys(classesPerFile)
         .forEach(function (file) {
             var classes = classesPerFile[file],
                 intersect = _.intersection(classes, joinedDiff);
+
             if (intersect.length) {
                 outputLines.push([
                     symbol.error,
@@ -82,6 +115,9 @@ function gulpSymdiff(opts) {
                 ]);
             }
         });
+
+        // custom event for testing
+        this.emit('__OUTPUT_LINES__', outputLines);
 
         outputLines.forEach(function (line) {
             gutil.log.apply(gutil, line);
