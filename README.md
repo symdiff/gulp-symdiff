@@ -6,16 +6,16 @@
 
 ## Installation
 
-```console
+~~~ console
 $ npm install gulp-symdiff --save-dev
-```
+~~~
 
 ## Usage
 
-```javascript
-var symdiff = require('gulp-symdiff')
-var html    = require('symdiff-html')
-var css     = require('symdiff-css')
+~~~ javascript
+var symdiff = require('gulp-symdiff'),
+    html    = require('symdiff-html'),
+    css     = require('symdiff-css');
 
 gulp
     .src(['src/*.css', 'src/*.html'])  // ALL the files
@@ -24,9 +24,9 @@ gulp
         css: [css]          // list all css plugins
     })
     .on('error', function() {
-        process.exit(1)    // break the build
+        process.exit(1);    // break the build
     }))
-```
+~~~
 
 ## License
 
