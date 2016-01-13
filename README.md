@@ -10,6 +10,14 @@
 $ npm install gulp-symdiff --save-dev
 ~~~
 
+Depending on what you want, you also have to install by your own the symdiff plugins, like:
+
+~~~ console
+$ npm install symdiff-html symdiff-css --save-dev
+~~~
+
+
+
 ## Usage
 
 ~~~ javascript
