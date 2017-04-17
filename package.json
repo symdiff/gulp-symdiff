@@ -35,7 +35,11 @@
     "minimist": "1.1.1",
     "mocha": "2.2.4",
     "sinon": "1.14.1",
-    "symdiff-css": "0.0.2",
-    "symdiff-html": "0.0.1"
+    "symdiff-css": "0.0.3",
+    "symdiff-html": "0.0.2"
+  },
+  "dependencies": {
+    "symdiff-css": "0.0.3",
+    "symdiff-html": "0.0.2"
   }
 }
